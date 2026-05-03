@@ -12,9 +12,9 @@ function tryParseJson(val: string): unknown {
 
 function getFieldType(field: z.ZodType): 'array' | 'boolean' | 'number' | 'string' | 'unknown' {
   // Unwrap ZodDefault
-  let unwrapped = field
+  let unwrapped: z.ZodTypeAny = field as z.ZodTypeAny
   if (unwrapped instanceof z.ZodDefault) {
-    unwrapped = unwrapped.unwrap()
+    unwrapped = unwrapped.unwrap() as z.ZodTypeAny
   }
 
   // Check for array
@@ -28,12 +28,12 @@ function getFieldType(field: z.ZodType): 'array' | 'boolean' | 'number' | 'strin
   }
 
   // Check for number types
-  if (unwrapped instanceof z.ZodNumber || (unwrapped instanceof z.ZodUnion && unwrapped.options.some((opt: z.ZodType) => opt instanceof z.ZodNumber))) {
+  if (unwrapped instanceof z.ZodNumber || (unwrapped instanceof z.ZodUnion && unwrapped.options.some((opt) => opt instanceof z.ZodNumber))) {
     return 'number'
   }
 
   // Check for string types
-  if (unwrapped instanceof z.ZodString || (unwrapped instanceof z.ZodUnion && unwrapped.options.some((opt: z.ZodType) => opt instanceof z.ZodString))) {
+  if (unwrapped instanceof z.ZodString || (unwrapped instanceof z.ZodUnion && unwrapped.options.some((opt) => opt instanceof z.ZodString))) {
     return 'string'
   }
 
@@ -41,9 +41,9 @@ function getFieldType(field: z.ZodType): 'array' | 'boolean' | 'number' | 'strin
 }
 
 function getArrayElementType(field: z.ZodType): 'string' | 'number' | 'unknown' {
-  let unwrapped = field
+  let unwrapped: z.ZodTypeAny = field as z.ZodTypeAny
   if (unwrapped instanceof z.ZodDefault) {
-    unwrapped = unwrapped.unwrap()
+    unwrapped = unwrapped.unwrap() as z.ZodTypeAny
   }
 
   if (unwrapped instanceof z.ZodArray) {
